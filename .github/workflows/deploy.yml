@@ -1,40 +1,36 @@
-name: Build and Deploy
+name: Deploy Next.js to FTP
+
 on:
   push:
     branches:
       - main
 
 jobs:
-  build_and_deploy:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v1
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: '18.13.0'
-
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          node-version: 14 # Adjust to your Node.js version
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
-      - name: Build static files
+      - name: Build Next.js app
         run: npm run build
 
-      - name: Deploy to FTP Server
+      - name: Deploy to FTP
         uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
-            server: ${{secrets.FTP_SERVER}}
-            username: ${{ secrets.FTP_USERNAME }}
-            password: ${{ secrets.FTP_PASSWORD }}
-            local-dir: '/'
-            server-dir: '/web/'
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          localDir: ./out # Adjust if your build output is in a different directory
+          remoteDir: /web # Adjust the remote directory path
+
+# You will need to set the FTP_SERVER, FTP_USERNAME, and FTP_PASSWORD secrets in your GitHub repository settings.
