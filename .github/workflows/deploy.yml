@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: First4Frames Build and Deploy
 on:
   push:
     branches:
