@@ -1,4 +1,10 @@
 import Image from 'next/image'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Home - First4Frames Gallery',
+  description: 'Fine Art And Prints Gallery Home Page.',
+}
 
 export default function Home() {
   return (
